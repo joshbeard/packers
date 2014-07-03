@@ -17,7 +17,7 @@ packer build demo.json
 
 ### Results
 
-This should produce 4 artifacts:
+This should produce 4 artifacts in the `output` directory:
 
 * `packer-centos-6.5-x86_64-vmware/`: A VMware image
 * `packer_vmware-iso_vmware.box`: A VMware Vagrant box

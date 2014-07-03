@@ -1,6 +1,10 @@
 {
   "variables": {
-    "mirror": "http://mirrors.xmission.com/centos/"
+    "iso_url": "http://mirrors.xmission.com/centos/6.5/isos/x86_64/CentOS-6.5-x86_64-minimal.iso",
+    "iso_checksum": "0d9dc37b5dd4befa1c440d2174e88a87",
+    "iso_checksum_type": "md5",
+    "memory_size": "512",
+    "cpu_count": "1"
   },
   "provisioners": [
     {
@@ -19,9 +23,9 @@
   "builders": [
     {
       "type": "virtualbox-iso",
-      "iso_url": "{{user `mirror`}}/6.5/isos/x86_64/CentOS-6.5-x86_64-minimal.iso",
-      "iso_checksum": "0d9dc37b5dd4befa1c440d2174e88a87",
-      "iso_checksum_type": "md5",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
       "guest_os_type": "RedHat_64",
       "boot_command": [
@@ -29,7 +33,7 @@
       ],
       "boot_wait": "10s",
       "disk_size": 40960,
-      "output_directory": "packer-centos-6.5-x86_64-virtualbox",
+      "output_directory": "output/packer-centos-6.5-x86_64-virtualbox",
       "shutdown_command": "echo 'vagrant'|sudo -S /sbin/halt -h -p",
       "ssh_username": "vagrant",
       "ssh_password": "vagrant",
@@ -41,13 +45,13 @@
           "modifyvm",
           "{{.Name}}",
           "--memory",
-          "480"
+          "{{user `memory_size`}}"
         ],
         [
           "modifyvm",
           "{{.Name}}",
           "--cpus",
-          "1"
+          "{{user `cpu_count`}}"
         ]
       ],
       "virtualbox_version_file": ".vbox_version",
@@ -55,9 +59,9 @@
     },
     {
       "type": "vmware-iso",
-      "iso_url": "{{user `mirror`}}/6.5/isos/x86_64/CentOS-6.5-x86_64-minimal.iso",
-      "iso_checksum": "0d9dc37b5dd4befa1c440d2174e88a87",
-      "iso_checksum_type": "md5",
+      "iso_url": "{{user `iso_url`}}",
+      "iso_checksum": "{{user `iso_checksum`}}",
+      "iso_checksum_type": "{{user `iso_checksum_type`}}",
       "ssh_username": "vagrant",
       "ssh_password": "vagrant",
       "ssh_port": 22,
@@ -65,7 +69,7 @@
       "http_directory": "http",
       "boot_wait": "10s",
       "disk_size": 40960,
-      "output_directory": "packer-centos-6.5-x86_64-vmware",
+      "output_directory": "output/packer-centos-6.5-x86_64-vmware",
       "shutdown_command": "echo 'vagrant'|sudo -S /sbin/halt -h -p",
       "guest_os_type": "centos-64",
       "boot_command": [
@@ -75,15 +79,16 @@
       "tools_upload_flavor": "linux",
       "vmx_data": {
         "cpuid.coresPerSocket": "1",
-        "memsize": "480",
-        "numvcpus": "1"
+        "memsize": "{{user `memory_size`}}",
+        "numvcpus": "{{user `cpu_count`}}"
       }
     }
   ],
   "post-processors": [
     {
       "type": "vagrant",
-      "keep_input_artifact": true
+      "keep_input_artifact": true,
+      "output": "output/packer_{{.BuildName}}_{{.Provider}}.box"
     }
   ]
 }
