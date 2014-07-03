@@ -1,0 +1,89 @@
+{
+  "variables": {
+    "mirror": "http://mirrors.xmission.com/centos/"
+  },
+  "provisioners": [
+    {
+      "execute_command": "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'",
+      "scripts": [
+        "scripts/centos/fix-slow-dns.sh",
+        "scripts/common/sshd.sh",
+        "scripts/common/vagrant.sh",
+        "scripts/common/vmtools.sh",
+        "scripts/centos/cleanup.sh",
+        "scripts/common/minimize.sh"
+      ],
+      "type": "shell"
+    }
+  ],
+  "builders": [
+    {
+      "type": "virtualbox-iso",
+      "iso_url": "{{user `mirror`}}/6.5/isos/x86_64/CentOS-6.5-x86_64-minimal.iso",
+      "iso_checksum": "0d9dc37b5dd4befa1c440d2174e88a87",
+      "iso_checksum_type": "md5",
+      "guest_additions_path": "VBoxGuestAdditions_{{.Version}}.iso",
+      "guest_os_type": "RedHat_64",
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos-6.5/ks.cfg<enter><wait>"
+      ],
+      "boot_wait": "10s",
+      "disk_size": 40960,
+      "output_directory": "packer-centos-6.5-x86_64-virtualbox",
+      "shutdown_command": "echo 'vagrant'|sudo -S /sbin/halt -h -p",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "http_directory": "http",
+      "vboxmanage": [
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--memory",
+          "480"
+        ],
+        [
+          "modifyvm",
+          "{{.Name}}",
+          "--cpus",
+          "1"
+        ]
+      ],
+      "virtualbox_version_file": ".vbox_version",
+      "vm_name": "packer-centos-6.5-x86_64"
+    },
+    {
+      "type": "vmware-iso",
+      "iso_url": "{{user `mirror`}}/6.5/isos/x86_64/CentOS-6.5-x86_64-minimal.iso",
+      "iso_checksum": "0d9dc37b5dd4befa1c440d2174e88a87",
+      "iso_checksum_type": "md5",
+      "ssh_username": "vagrant",
+      "ssh_password": "vagrant",
+      "ssh_port": 22,
+      "ssh_wait_timeout": "10000s",
+      "http_directory": "http",
+      "boot_wait": "10s",
+      "disk_size": 40960,
+      "output_directory": "packer-centos-6.5-x86_64-vmware",
+      "shutdown_command": "echo 'vagrant'|sudo -S /sbin/halt -h -p",
+      "guest_os_type": "centos-64",
+      "boot_command": [
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos-6.5/ks.cfg<enter><wait>"
+      ],
+      "vm_name": "packer-centos-6.5-x86_64",
+      "tools_upload_flavor": "linux",
+      "vmx_data": {
+        "cpuid.coresPerSocket": "1",
+        "memsize": "480",
+        "numvcpus": "1"
+      }
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "vagrant",
+      "keep_input_artifact": true
+    }
+  ]
+}
