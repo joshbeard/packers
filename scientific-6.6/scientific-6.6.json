@@ -1,6 +1,6 @@
 {
   "variables": {
-    "iso_url": "http://mirrors.xmission.com/scientific/6x/x86_64/iso/SL-6.6-x86_64-2014-11-05-Install-DVD.iso",
+    "iso_url": "SL-6.6-x86_64-2014-11-05-Install-DVD.iso",
     "iso_checksum": "36be3cb52aa18ea48c493500de63cf1a",
     "iso_checksum_type": "md5",
     "memory_size": "512",
