@@ -1,7 +1,7 @@
 param($global:RestartRequired=0,
         $global:MoreUpdates=0,
         $global:MaxCycles=5,
-        $MaxUpdatesPerCycle=30)
+        $MaxUpdatesPerCycle=50)
 
 $Logfile = "C:\Windows\Temp\win-updates.log"
 
