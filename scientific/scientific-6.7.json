@@ -73,7 +73,7 @@
       "shutdown_command": "echo 'vagrant'|sudo -S /sbin/halt -h -p",
       "guest_os_type": "Centos-64",
       "boot_command": [
-        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/ks.cfg<enter><wait>"
+        "<tab> text ks=http://{{ .HTTPIP }}:{{ .HTTPPort }}/centos/ks.cfg<enter><wait>"
       ],
       "vm_name": "scientific-6.7-64",
       "tools_upload_flavor": "linux",
