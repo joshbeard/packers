@@ -1,5 +1,6 @@
 #!/bin/bash
-# From https://github.com/opscode/bento
+# Originally from https://github.com/opscode/bento
+yum install -y gcc bzip2 make kernel-devel-$(uname -r) perl
 
 case "$PACKER_BUILDER_TYPE" in
 
